@@ -29,7 +29,12 @@ sudo mv composer.phar /usr/bin/composer
 ```
 composer global require ventureoak/symfony2-homestead
 ```
-If it's the first time you use composer globaly, um should ensure the ~/.composer/vendor/bin is in your Path 
+If it's the first time you use composer globaly, you should ensure the ~/.composer/vendor/bin is in your Path by adding the next code to the end of **.profile** file
+```
+if [ -d "$HOME/.composer/vendor/bin" ]; then
+   PATH="$HOME/.composer/vendor/bin:$PATH"
+fi
+```
 
 ## Usage
 
