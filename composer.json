@@ -11,10 +11,6 @@
         {
             "name": "Taylor Otwell",
             "email": "taylorotwell@gmail.com"
-        },
-        {
-            "name": "André Sá",
-            "email": "asa@ventureoak.com"
         }
     ],
     "autoload": {
