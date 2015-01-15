@@ -1,6 +1,6 @@
 {
-    "name": "laravel/homestead",
-    "description": "A virtual machine for web artisans.",
+    "name": "ventureoak/symfony2-homestead",
+    "description": "An adaptation of the homestead virtual machine for web artisans.",
     "require": {
         "php": ">=5.4",
         "symfony/console": "~2.0",
@@ -11,6 +11,10 @@
         {
             "name": "Taylor Otwell",
             "email": "taylorotwell@gmail.com"
+        },
+        {
+            "name": "André Sá",
+            "email": "asa@ventureoak.com"
         }
     ],
     "autoload": {
