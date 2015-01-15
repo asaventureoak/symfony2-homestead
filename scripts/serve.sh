@@ -1,40 +1,37 @@
 #!/usr/bin/env bash
-
 block="server {
-    listen 80;
     server_name $1;
     root "$2";
 
-    index index.html index.htm index.php;
-
-    charset utf-8;
-
     location / {
-        try_files \$uri \$uri/ /index.php?\$query_string;
+        # try to serve file directly, fallback to app.php
+        try_files \$uri /app.php\$is_args\$args;
     }
-
-    location = /favicon.ico { access_log off; log_not_found off; }
-    location = /robots.txt  { access_log off; log_not_found off; }
-
-    access_log off;
-    error_log  /var/log/nginx/$1-error.log error;
-
-    sendfile off;
-
-    location ~ \.php$ {
-        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+    # DEV
+    # This rule should only be placed on your development environment
+    # In production, don't include this and don't deploy app_dev.php or config.php
+    location ~ ^/(app_dev|config)\.php(/|\$) {
         fastcgi_pass unix:/var/run/php5-fpm.sock;
-        fastcgi_index index.php;
+        fastcgi_split_path_info ^(.+\.php)(/.*)\$;
         include fastcgi_params;
-        fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-        fastcgi_intercept_errors off;
-        fastcgi_buffer_size 16k;
-        fastcgi_buffers 4 16k;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param HTTPS off;
+    }
+    # PROD
+    location ~ ^/app\.php(/|\$) {
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+        fastcgi_split_path_info ^(.+\.php)(/.*)\$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param HTTPS off;
+        # Prevents URIs that include the front controller. This will 404:
+        # http://domain.tld/app.php/some-path
+        # Remove the internal directive to allow URIs like this
+        internal;
     }
 
-    location ~ /\.ht {
-        deny all;
-    }
+    error_log /var/log/nginx/$1_error.log;
+    access_log /var/log/nginx/$1_access.log;
 }
 "
 
